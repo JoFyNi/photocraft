@@ -1,11 +1,18 @@
-<p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
-</p>
+> **Unofficial fork with an AI Assistant.** This is a modified version of
+> [PhotoCraft](https://github.com/storytold/photocraft) by the ArtCraft team. It is **not**
+> made, endorsed or supported by the ArtCraft team.
+>
+> **What's added:** *Filter › Plug-ins › AI Assistant…* opens a panel where you describe an edit
+> in plain language ("make it warmer and a little more contrasty", "blur the background"). A
+> chat model on **your own [Ollama](https://ollama.com) server** plans it as PhotoCraft commands
+> (adjustment layers, selections, filters), and the panel runs them as **one undo step**. Files,
+> preferences, plug-ins and the clipboard stay off-limits to the model. Details:
+> [docs/plugins.md › AI Assistant](docs/plugins.md#ai-assistant-filter--plug-ins--ai-assistant).
+> Code: `crates/ui-egui/src/assistant/`. Desktop builds only.
+>
+> It isn't a WebAssembly plug-in because plug-ins get no network access (plug-in ABI v1).
+> Everything below is the original PhotoCraft README.
+
 
 <p align="center">
   <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.photocraft.png" width="128" height="128" alt="PhotoCraft icon: an engraved nine-tailed fox on a blue tile">
@@ -448,8 +455,7 @@ Forks and modified versions must remove them.
 <sub>Adobe, Photoshop, Illustrator, Premiere Pro, Lightroom, Acrobat, After Effects and InDesign are trademarks or registered trademarks of Adobe Inc. in the United States and/or other countries. PhotoCraft is an independent, open-source project and is not affiliated with, sponsored by or endorsed by Adobe Inc.; these names are used only to describe the workflows it is compatible with.</sub>
 
 <p align="center">
-  <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
-  <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
+  <sub>This fork is based on PhotoCraft, made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community. The AI Assistant is an unofficial addition.</sub>
 </p>
 
 ## Star history

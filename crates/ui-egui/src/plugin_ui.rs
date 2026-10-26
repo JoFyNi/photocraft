@@ -41,10 +41,15 @@ pub fn insert_menu_items(app: &PhotocraftApp, items: &mut Vec<MenuItem>) {
     for (k, it) in extra.into_iter().enumerate() {
         items.insert(at + k, it);
     }
+    // The AI assistant: not a WebAssembly plug-in (those get no network), but listed with them.
+    crate::assistant::insert_menu_item(items);
 }
 
 /// Enabled state of a plug-in menu item (`None` for other ids).
 pub fn is_enabled(app: &PhotocraftApp, id: &str) -> Option<bool> {
+    if id == crate::assistant::MENU_ID {
+        return Some(true);
+    }
     let pid = id.strip_prefix(PREFIX)?;
     Some(photocraft_plugins::registry::get(pid).is_some() && app.session.is_enabled("plugin.run"))
 }
@@ -52,6 +57,9 @@ pub fn is_enabled(app: &PhotocraftApp, id: &str) -> Option<bool> {
 /// Runs a plug-in menu item: straight away when it has no parameters (or params were given),
 /// else through its dialog. "Install Plug-in…" without params opens its path dialog.
 pub fn menu(app: &mut PhotocraftApp, id: &str, params: &Value) -> Option<Result<Value, String>> {
+    if let Some(r) = crate::assistant::menu(app, id) {
+        return Some(r);
+    }
     let given = params.as_object().is_some_and(|o| !o.is_empty());
     if id == "plugin.install" && !given {
         return Some(Ok(json!({"dialog": crate::filter_dialog::open(app, "plugin.install")})));

@@ -30,6 +30,29 @@ Plug-ins are installed **per process**, not per document. A smart filter recorde
 installed; if it is missing, the filter is skipped (the cached pixels stay as they were), like other
 filters PhotoCraft does not implement.
 
+## AI Assistant (Filter › Plug-ins › AI Assistant…)
+
+Plug-ins get no network, so an assistant that talks to a language model can't be one. The
+**AI Assistant** panel is part of the shell instead (`crates/ui-egui/src/assistant/`) and is
+listed with the plug-ins. You describe an edit in your own words ("make it warmer and a little more
+contrasty"); a chat model on your own [Ollama](https://ollama.com) server plans it as engine
+commands, and the panel runs them.
+
+- **Settings** (gear button, saved with the UI state): AI server (`http://host:11434`; a bare host
+  gets port 11434), chat model, embedding model (`bge-m3`; empty = keyword search only), context
+  length, thinking (off is several times faster with the same plans), screenshot for vision models.
+  Empty fields fall back to `OLLAMA_HOST`, `PHOTOCRAFT_AI_MODEL` and `PHOTOCRAFT_AI_EMBED_MODEL`.
+- **How it runs:** a worker thread asks the model; every step goes to the UI thread as an in-process
+  control request (`engine.execute`, `engine.commands`, `ui.screenshot`), so it behaves exactly
+  like an agent on the [control channel](control-protocol.md): one History step per request
+  (`coalesce`), background jobs awaited, the automation authorizer applied. **Undo** in the panel
+  takes back a whole request.
+- **Guard rails:** files, preferences, plug-ins, scripts, actions, history, the clipboard, preset
+  libraries and other documents are blocked, and so are params naming a file (`file`, an ICC path).
+  A step naming a `layer` after the same plan created one waits for the real id instead of hitting a
+  guessed layer. The model can look up more commands with its own `befehle.suchen` query.
+- **Desktop only:** the browser build shows a notice (it can't reach a server on your network).
+
 ## The sandbox
 
 The host is [`wasmi`](https://github.com/wasmi-labs/wasmi), a pure-Rust WebAssembly interpreter

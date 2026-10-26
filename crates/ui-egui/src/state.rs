@@ -464,6 +464,9 @@ pub struct Panels {
     /// Window › Brushes: dockable panel, like Photoshop's.
     #[serde(default)]
     pub brushes: bool,
+    /// Filter › Plug-ins › AI Assistant: the floating assistant panel (`assistant`).
+    #[serde(default)]
+    pub assistant: bool,
     /// Window › Character / Paragraph: the Character | Paragraph dock group (#150).
     #[serde(default)]
     pub character: bool,
@@ -507,6 +510,7 @@ impl Default for Panels {
             status_bar: true,
             brush_settings: false,
             brushes: false,
+            assistant: false,
             character: false,
             toolbar_double: false,
             dock: true,
@@ -1604,6 +1608,9 @@ pub struct UiState {
     /// The tonal range dragged across the Histogram panel's graph (its statistics), `[from, to]`.
     #[serde(default, skip_deserializing)]
     pub histogram_range: Option<[u8; 2]>,
+    /// The AI assistant's server, models and options (the chat itself is not saved).
+    #[serde(default)]
+    pub assistant: crate::assistant::AssistantSettings,
     /// Brush Settings: selected section (0 = Brush Tip Shape) and tab (0 settings, 1 Brushes).
     #[serde(default)]
     pub brush_section: usize,
@@ -1725,6 +1732,7 @@ impl Default for UiState {
             layers_panel_options: LayersPanelOptions::default(),
             histogram_panel: Default::default(),
             histogram_range: None,
+            assistant: Default::default(),
             layers_panel_dialog: None,
             layer_filter_by: Default::default(),
             layer_filter_name: String::new(),

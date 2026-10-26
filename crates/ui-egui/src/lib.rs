@@ -35,6 +35,7 @@ pub(crate) mod blend_preview;
 pub mod blur_pins;
 mod brand;
 pub(crate) mod brush_cursor;
+pub mod assistant;
 pub mod brush_panel;
 pub mod brush_picker;
 pub mod brush_preset_dialog;
@@ -787,6 +788,8 @@ pub struct PhotocraftApp {
     /// The first digit of a two-digit opacity typed on the number keys (`opacity_keys`, #352).
     pub(crate) opacity_keys: opacity_keys::Pending,
     control_rx: Option<Receiver<ControlRequest>>,
+    /// Filter › Plug-ins › AI Assistant: the panel's chat and its worker (`assistant`).
+    pub(crate) assistant: assistant::Assistant,
     /// `ui.screenshot` requests: bounded admission, a weak-slot callback per issuance, monotonic
     /// deadlines and a capture-time geometry epoch (see `screenshot.rs`).
     captures: screenshot::Captures,
@@ -1112,6 +1115,7 @@ impl PhotocraftApp {
             caps_lock: false,
             opacity_keys: None,
             control_rx: None,
+            assistant: assistant::Assistant::default(),
             captures: screenshot::Captures::default(),
             type_ime: type_tool::ImeState::default(),
             input_waiters: Vec::new(),
@@ -2233,7 +2237,19 @@ impl PhotocraftApp {
     }
 
     fn drain_control(&mut self, ctx: &egui::Context) {
-        let Some(rx) = self.control_rx.take() else { return };
+        if let Some(rx) = self.control_rx.take() {
+            self.serve_control(ctx, &rx);
+            self.control_rx = Some(rx);
+        }
+        // The AI assistant's steps: the same requests, from its worker thread in this process.
+        if let Some(rx) = self.assistant.requests.take() {
+            self.serve_control(ctx, &rx);
+            self.assistant.requests = Some(rx);
+        }
+    }
+
+    /// Runs every queued control request from one source.
+    fn serve_control(&mut self, ctx: &egui::Context, rx: &Receiver<ControlRequest>) {
         while let Ok(req) = rx.try_recv() {
             let reply = req.reply.clone();
             if req.deadline.is_some_and(|deadline| std::time::Instant::now() >= deadline) || !req.dispatch.start() {
@@ -2259,7 +2275,6 @@ impl PhotocraftApp {
             // `ui.set` may have changed the edit target: the next request sees its colours.
             self.sync_mask_targets();
         }
-        self.control_rx = Some(rx);
     }
 
     /// The active document's identity at admission: a queued capture never applies to another
@@ -2581,6 +2596,7 @@ impl PhotocraftApp {
             panels::properties_window(self, &ctx);
         }
         brush_panel::window(self, &ctx);
+        assistant::window(self, &ctx);
         preset_panels::windows(self, &ctx);
         gradient_ui::editor_window(self, &ctx);
         type_panels_ui::windows(self, &ctx);

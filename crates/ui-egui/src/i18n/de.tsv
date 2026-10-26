@@ -3475,3 +3475,26 @@ curves	Smooth	Glätten
 	Interpolation	Interpolation
 	Target	Ziel
 	Units	Einheiten
+	AI Assistant	KI-Assistent
+	AI Assistant…	KI-Assistent…
+	Enter a chat model in the settings (gear button).	Tragen Sie in den Einstellungen (Zahnrad) ein Chat-Modell ein.
+	The assistant stopped; send again to restart it.	Der Assistent wurde beendet; senden Sie erneut, um ihn neu zu starten.
+	Starting…	Starte …
+	Settings	Einstellungen
+	The AI assistant needs the desktop app: the browser can't reach your AI server.	Der KI-Assistent braucht die Desktop-App: Der Browser erreicht Ihren KI-Server nicht.
+	Describe what should happen, e.g. “Make the image warmer and a little more contrasty”. Each request is one step in the History panel.	Beschreiben Sie, was passieren soll, z. B. „Mach das Bild wärmer und etwas kontrastreicher“. Jeder Auftrag ist ein Schritt im Protokoll-Bedienfeld.
+	What should I do?	Was soll ich tun?
+	Stopping after this step…	Halte nach diesem Schritt an …
+	Send	Senden
+	Undo the last request (one History step)	Den letzten Auftrag rückgängig machen (ein Protokollschritt)
+	Plan only	Nur planen
+	New chat	Neues Gespräch
+	AI server	KI-Server
+	Chat model	Chat-Modell
+	Embedding model	Embedding-Modell
+	Context length	Kontextlänge
+	Let the model think first (slower)	Modell erst nachdenken lassen (langsamer)
+	Send a screenshot along (vision models)	Bildschirmfoto mitschicken (Modelle mit Bildverständnis)
+	Load models	Modelle laden
+	Ask the server which models it has	Den Server nach seinen Modellen fragen
+	Models on the server	Modelle auf dem Server

@@ -46,6 +46,10 @@ web-time = { workspace = true }
 # Floating panels open in their own OS windows on the desktop; the web keeps them in the page.
 craft-ui = { workspace = true, features = ["native-windows"] }
 craft-update = { workspace = true }
+# The AI assistant's client for the user's own Ollama server (Filter › Plug-ins › AI Assistant);
+# the same ureq craft-update already links, without its TLS default (the server is plain HTTP on
+# the LAN; craft-update keeps TLS compiled in).
+ureq = { version = "=3.5.0", default-features = false }
 rayon = { workspace = true }
 # Safe native UI-language APIs (Windows/macOS); no subprocess or web dependency.
 sys-locale = "=0.3.2"
